@@ -35,8 +35,21 @@ class FireGento_GermanSetup_Model_Tax_Config extends Mage_Tax_Model_Config
 {
     const XML_PATH_SHIPPING_TAX_ON_PRODUCT_TAX = 'tax/classes/shipping_tax_on_product_tax';
 
-    const USE_HIGHTES_TAX_ON_PRODUCTS = 1;
+    const USE_HIGHEST_TAX_ON_PRODUCTS = 1;
     const USE_TAX_DEPENDING_ON_PRODUCT_VALUES = 2;
+    const USE_PROPORTIONALLY_MIXED_TAX = 3;
+
+    protected $_simulateClass = null;
+
+    public function setSimulateClass($simulateClass)
+    {
+        $this->_simulateClass = $simulateClass;
+    }
+
+    public function getSimulateClass()
+    {
+        return $this->_simulateClass;
+    }
 
     /**
      * Get tax class id specified for shipping tax estimation based on highest product
@@ -48,6 +61,9 @@ class FireGento_GermanSetup_Model_Tax_Config extends Mage_Tax_Model_Config
      */
     public function getShippingTaxClass($store = null)
     {
+        if ($this->_simulateClass != null) {
+            return $this->_simulateClass;
+        }
 
         /* @var $session Mage_Checkout_Model_Session */
         $session = Mage::getSingleton('checkout/session');
