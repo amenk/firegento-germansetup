@@ -32,20 +32,6 @@
  */
 class FireGento_GermanSetup_Model_Tax_Sales_Total_Quote_Tax extends Mage_Tax_Model_Sales_Total_Quote_Tax {
 
-
-    protected function _getQuoteItems()
-    {
-        /* @var $session Mage_Checkout_Model_Session */
-        $session = Mage::getSingleton('checkout/session');
-
-        if ($session->hasQuote()) {
-            $quoteItems = $session->getQuote()->getAllItems();
-        } else {
-            $quoteItems = array();
-        }
-        return $quoteItems;
-    }
-
     /**
      * Calculates the portions of a quote with a specifc tax class
      * The price incl tax is used for the calculation
@@ -102,7 +88,7 @@ class FireGento_GermanSetup_Model_Tax_Sales_Total_Quote_Tax extends Mage_Tax_Mod
         if (!$address->getIsShippingInclTax()) {
             throw Exception('Not implemented');
         }
-        $portions = $this->_collectTaxClassPortions($this->_getQuoteItems());
+        $portions = $this->_collectTaxClassPortions($address->getQuote()->getAllItems());
 
         $totalTaxable = $address->getShippingTaxable();
         $totalBaseTaxable = $address->getBaseShippingTaxable();
