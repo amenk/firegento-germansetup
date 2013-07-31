@@ -46,9 +46,9 @@ class FireGento_GermanSetup_Block_Catalog_Product_Price_Info extends Mage_Core_B
 
         if (!empty($shippingCostUrl) && $this->getIsShowShippingLink()) {
             if ($this->getIsIncludingShippingCosts()) {
-                $texts['shipping'] = $this->__('incl. <a href="%s">Shipping Cost</a>', $this->getFormattedTaxRate(), $shippingCostUrl);
+                $texts['shipping'] = $this->__('incl. <a href="%s">Shipping Cost</a>', $shippingCostUrl);
             } else {
-                $texts['shipping'] = $this->__('excl. <a href="%s">Shipping Cost</a>', $this->getFormattedTaxRate(), $shippingCostUrl);
+                $texts['shipping'] = $this->__('excl. <a href="%s">Shipping Cost</a>', $shippingCostUrl);
             }
         }
 
