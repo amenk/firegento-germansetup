@@ -90,6 +90,8 @@ class FireGento_GermanSetup_Model_Tax_Sales_Total_Quote_Tax extends Mage_Tax_Mod
         }
         $portions = $this->_collectTaxClassPortions($address->getQuote()->getAllItems());
 
+        Mage::dispatchEvent('firegento_germansetup_calculate_shipping_tax_portions_after', array('quote_address' => $address, 'portions' => $portions));
+
         $totalTaxable = $address->getShippingTaxable();
         $totalBaseTaxable = $address->getBaseShippingTaxable();
         $totalShippingTaxAmount = 0;
