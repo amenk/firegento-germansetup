@@ -48,7 +48,9 @@ class FireGento_GermanSetup_Block_Bundle_Catalog_Product_Price
             return $html;
         }
 
-        $html .= $this->getLayout()->createBlock('core/template')
+        $htmlObject = new Varien_Object();
+        $htmlObject->setParentHtml($html);
+        $htmlTemplate = $this->getLayout()->createBlock('germansetup/catalog_product_price_info')
             ->setTemplate('germansetup/price_info.phtml')
             ->setFormattedTaxRate($this->getFormattedTaxRate())
             ->setIsIncludingTax($this->isIncludingTax())
@@ -57,7 +59,45 @@ class FireGento_GermanSetup_Block_Bundle_Catalog_Product_Price
             ->setFormattedWeight($this->getFormattedWeight())
             ->toHtml();
 
+        $htmlObject->setHtml($htmlTemplate);
+
+        $this->_addDeliveryTimeHtml($htmlObject);
+
+        Mage::dispatchEvent('germansetup_after_product_price',
+            array(
+                'html_obj' => $htmlObject,
+                'block' => $this,
+            )
+        );
+
+        $html = $htmlObject->getPrefix();
+        $html .= $htmlObject->getParentHtml();
+        $html .= $htmlObject->getHtml();
+        $html .= $htmlObject->getSuffix();
         return $html;
+    }
+
+    /**
+     * Add delivery time on category pages only
+     *
+     * @param $htmlObject
+     */
+    protected function _addDeliveryTimeHtml($htmlObject)
+    {
+        if (!Mage::getStoreConfigFlag('catalog/price/display_delivery_time_on_categories')) {
+            return;
+        }
+
+        $pathInfo = Mage::app()->getRequest()->getPathInfo();
+        if (strpos($pathInfo, 'catalog/category/view') !== false
+            || strpos($pathInfo, 'catalogsearch/result') !== false) {
+            if ($this->getProduct()->getDeliveryTime()) {
+                $html = '<p class="delivery-time">';
+                $html .= $this->__('Delivery Time') . ': ' . $this->getProduct()->getDeliveryTime();
+                $html .= '</p>';
+                $htmlObject->setSuffix($html);
+            }
+        }
     }
 
     /**
